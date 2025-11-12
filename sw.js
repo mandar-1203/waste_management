@@ -1,0 +1,51 @@
+
+const CACHE_NAME = 'pune-waste-v1';
+const urlsToCache = [
+  '/',
+  '/index.html',
+  '/dashboard.html',
+  '/login.html',
+  '/signup.html',
+  '/style.css',
+  '/auth-style.css',
+  '/dashboard.js',
+  '/firebase-config.js',
+  '/manifest.json',
+  'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css',
+  'https://unpkg.com/leaflet@1.9.4/dist/leaflet.css',
+  'https://unpkg.com/leaflet@1.9.4/dist/leaflet.js',
+  'https://cdn.jsdelivr.net/npm/chart.js'
+];
+
+self.addEventListener('install', event => {
+  event.waitUntil(
+    caches.open(CACHE_NAME)
+      .then(cache => cache.addAll(urlsToCache))
+  );
+});
+
+self.addEventListener('fetch', event => {
+  event.respondWith(
+    caches.match(event.request)
+      .then(response => {
+        if (response) {
+          return response;
+        }
+        return fetch(event.request);
+      }
+    )
+  );
+});
+
+self.addEventListener('notificationclick', event => {
+  event.notification.close();
+  
+  if (event.action === 'view') {
+    event.waitUntil(
+      clients.openWindow('/dashboard.html')
+    );
+  } else if (event.action === 'notify') {
+    // Handle notify team action
+    console.log('Team notification sent');
+  }
+});

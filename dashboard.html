@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Dashboard - Pune Smart Waste Management System</title>
+  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#4CAF50">
+  <link rel="apple-touch-icon" href="icon-192x192.png">
+</head>
+<body>
+  <!-- Header -->
+  <header class="header">
+    <div class="container">
+      <div class="header-content">
+        <div class="logo">
+          <i class="fas fa-recycle"></i>
+          <h1>Pune Smart Waste</h1>
+        </div>
+        <div class="header-controls">
+          <button class="theme-toggle" id="themeToggle">
+            <i class="fas fa-moon"></i>
+          </button>
+          <!-- User section and logout removed -->
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Navigation Tabs -->
+  <nav class="nav-tabs">
+    <div class="container">
+      <div class="tab-buttons">
+        <button class="tab-btn active" data-tab="dashboard">
+          <i class="fas fa-tachometer-alt"></i> Dashboard
+        </button>
+        <button class="tab-btn" data-tab="map">
+          <i class="fas fa-map-marker-alt"></i> Map View
+        </button>
+        <button class="tab-btn" data-tab="analytics">
+          <i class="fas fa-chart-bar"></i> Analytics
+        </button>
+        <button class="tab-btn" data-tab="alerts">
+          <i class="fas fa-bell"></i> Alerts
+        </button>
+        <button class="tab-btn" data-tab="settings">
+          <i class="fas fa-cog"></i> Settings
+        </button>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Main Content -->
+  <main class="main-content">
+    <div class="container">
+
+      <!-- Dashboard Tab -->
+      <div id="dashboard" class="tab-content active">
+        <div class="stats-grid">
+          <div class="stat-card">
+            <div class="stat-icon red">
+              <i class="fas fa-exclamation-triangle"></i>
+            </div>
+            <div class="stat-info">
+              <h3 id="fullBins">0</h3>
+              <p>Full Bins</p>
+            </div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon orange">
+              <i class="fas fa-clock"></i>
+            </div>
+            <div class="stat-info">
+              <h3 id="halfBins">0</h3>
+              <p>Half Full</p>
+            </div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon green">
+              <i class="fas fa-check-circle"></i>
+            </div>
+            <div class="stat-info">
+              <h3 id="availableBins">0</h3>
+              <p>Available</p>
+            </div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon blue">
+              <i class="fas fa-trash"></i>
+            </div>
+            <div class="stat-info">
+              <h3 id="totalBins">0</h3>
+              <p>Total Bins</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="dashboard-content">
+          <div class="bin-list-section">
+            <h2><i class="fas fa-list"></i> Bin Status Overview</h2>
+            <div id="bin-list" class="bin-grid"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Map Tab -->
+      <div id="map" class="tab-content">
+        <div class="map-container">
+          <div id="leaflet-map"></div>
+          <div class="map-controls">
+            <button class="map-btn" id="refreshMap">
+              <i class="fas fa-sync-alt"></i> Refresh
+            </button>
+            <button class="map-btn" id="centerMap">
+              <i class="fas fa-crosshairs"></i> Center
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Analytics Tab -->
+      <div id="analytics" class="tab-content">
+        <div class="analytics-grid">
+          <div class="chart-card">
+            <h3><i class="fas fa-chart-pie"></i> Bin Status Distribution</h3>
+            <div class="chart-placeholder">
+              <canvas id="statusChart" width="400" height="200"></canvas>
+            </div>
+          </div>
+          <div class="chart-card">
+            <h3><i class="fas fa-chart-line"></i> Fill Level Trends</h3>
+            <div class="trend-list" id="trendList"></div>
+          </div>
+          <div class="chart-card">
+            <h3><i class="fas fa-chart-area"></i> Weekly Collection Trends</h3>
+            <div class="chart-placeholder">
+              <canvas id="weeklyTrendsChart" width="400" height="200"></canvas>
+            </div>
+          </div>
+          <div class="chart-card">
+            <h3><i class="fas fa-chart-bar"></i> Collection Efficiency by Area</h3>
+            <div class="chart-placeholder">
+              <canvas id="efficiencyChart" width="400" height="200"></canvas>
+            </div>
+          </div>
+        </div>
+
+        <div class="route-optimization-section">
+          <h2><i class="fas fa-route"></i> Route Optimization</h2>
+          <div class="route-controls">
+            <button class="btn primary" id="optimizeRouteBtn">
+              <i class="fas fa-route"></i> Optimize Collection Route
+            </button>
+            <button class="btn secondary" id="exportRouteBtn">
+              <i class="fas fa-download"></i> Export Route
+            </button>
+          </div>
+          <div id="routeResults" class="route-results"></div>
+        </div>
+
+        <div class="environmental-impact-section">
+          <h2><i class="fas fa-leaf"></i> Environmental Impact</h2>
+          <div id="environmentalStats" class="stats-grid"></div>
+        </div>
+      </div>
+
+      <!-- Alerts Tab -->
+      <div id="alerts" class="tab-content">
+        <div class="alerts-section">
+          <h2><i class="fas fa-bell"></i> Priority Alerts</h2>
+          <div id="alertsList" class="alerts-list"></div>
+        </div>
+      </div>
+
+      <!-- Settings Tab -->
+      <div id="settings" class="tab-content">
+        <div class="settings-section">
+          <h2><i class="fas fa-cog"></i> System Settings</h2>
+
+          <div class="settings-grid">
+            <div class="setting-card">
+              <h3><i class="fas fa-bell"></i> Notification Settings</h3>
+              <div class="setting-item">
+                <label>
+                  <input type="checkbox" id="enablePushNotifications" checked>
+                  Enable Push Notifications
+                </label>
+              </div>
+              <div class="setting-item">
+                <label>
+                  <input type="checkbox" id="enableEmailAlerts" checked>
+                  Enable Email Alerts
+                </label>
+              </div>
+              <div class="setting-item">
+                <label for="alertThreshold">Full Bin Alert Threshold (%):</label>
+                <input type="range" id="alertThreshold" min="70" max="95" value="85">
+                <span id="thresholdValue">85%</span>
+              </div>
+            </div>
+
+            <div class="setting-card">
+              <h3><i class="fas fa-clock"></i> Collection Schedule</h3>
+              <div class="setting-item">
+                <label for="collectionFrequency">Collection Frequency:</label>
+                <select id="collectionFrequency">
+                  <option value="daily">Daily</option>
+                  <option value="alternate" selected>Alternate Days</option>
+                  <option value="weekly">Weekly</option>
+                </select>
+              </div>
+              <div class="setting-item">
+                <label for="workingHours">Working Hours:</label>
+                <input type="time" id="startTime" value="06:00">
+                <span>to</span>
+                <input type="time" id="endTime" value="18:00">
+              </div>
+            </div>
+
+            <div class="setting-card">
+              <h3><i class="fas fa-map"></i> Map Settings</h3>
+              <div class="setting-item">
+                <label>
+                  <input type="checkbox" id="enableClustering" checked>
+                  Enable Marker Clustering
+                </label>
+              </div>
+              <div class="setting-item">
+                <label>
+                  <input type="checkbox" id="showTrafficLayer">
+                  Show Traffic Layer
+                </label>
+              </div>
+              <div class="setting-item">
+                <label for="mapStyle">Map Style:</label>
+                <select id="mapStyle">
+                  <option value="streets" selected>Streets</option>
+                  <option value="satellite">Satellite</option>
+                  <option value="hybrid">Hybrid</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="setting-card">
+              <h3><i class="fas fa-database"></i> Data Management</h3>
+              <div class="setting-item">
+                <button class="btn secondary" id="exportDataBtn">
+                  <i class="fas fa-download"></i> Export Data
+                </button>
+              </div>
+              <div class="setting-item">
+                <button class="btn secondary" id="clearCacheBtn">
+                  <i class="fas fa-trash"></i> Clear Cache
+                </button>
+              </div>
+              <div class="setting-item">
+                <button class="btn primary" id="saveSettingsBtn">
+                  <i class="fas fa-save"></i> Save Settings
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </main>
+
+  <!-- Scripts -->
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="firebase-config.js"></script>
+  <script src="error-handler.js"></script>
+  <script src="notifications.js"></script>
+  <script src="route-optimizer.js"></script>
+  <script src="real-time-manager.js"></script>
+  <script src="analytics-manager.js"></script>
+  <script src="iot-sensor-manager.js"></script>
+  <script src="smart-city-integration.js"></script>
+  <script src="advanced-dashboard.js"></script>
+  <script src="dashboard.js"></script>
+
+  <script>
+    // Authentication check on page load removed
+  </script>
+</body>
+</html>

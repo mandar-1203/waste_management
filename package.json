@@ -1,0 +1,29 @@
+{
+  "name": "pune-smart-waste-tracker",
+  "version": "1.0.0",
+  "description": "Smart waste management system for Pune's Peth areas",
+  "main": "index.html",
+  "scripts": {
+    "start": "npx http-server -p 3000 -c-1",
+    "dev": "npx live-server --port=3000 --open=/index.html",
+    "build": "echo 'No build process needed for static HTML'",
+    "serve": "python -m http.server 3000"
+  },
+  "keywords": [
+    "waste-management",
+    "smart-city",
+    "iot",
+    "pune",
+    "dashboard"
+  ],
+  "author": "Pune Smart Waste Team",
+  "license": "MIT",
+  "devDependencies": {
+    "http-server": "^14.1.1",
+    "live-server": "^1.2.2"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/your-username/pune-smart-waste-tracker.git"
+  }
+} 

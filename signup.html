@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Sign Up - Pune Smart Waste Management System</title>
+  <link rel="stylesheet" href="auth-style.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#4CAF50">
+  <link rel="apple-touch-icon" href="icon-192x192.png">
+</head>
+<body>
+  <div class="auth-container">
+    <div class="auth-card">
+      <div class="auth-header">
+        <div class="logo">
+          <i class="fas fa-recycle"></i>
+          <h1>Pune Smart Waste</h1>
+        </div>
+        <h2>Create Account</h2>
+        <p>Join us in making Pune cleaner</p>
+      </div>
+
+      <form class="auth-form" id="signupForm">
+        <div class="form-group">
+          <label for="fullName">
+            <i class="fas fa-user"></i>
+            Full Name
+          </label>
+          <input type="text" id="fullName" name="fullName" required>
+        </div>
+
+        <div class="form-group">
+          <label for="email">
+            <i class="fas fa-envelope"></i>
+            Email Address
+          </label>
+          <input type="email" id="email" name="email" required>
+        </div>
+
+        <div class="form-group">
+          <label for="phone">
+            <i class="fas fa-phone"></i>
+            Phone Number
+          </label>
+          <input type="tel" id="phone" name="phone" required>
+        </div>
+
+        <div class="form-group">
+          <label for="password">
+            <i class="fas fa-lock"></i>
+            Password
+          </label>
+          <input type="password" id="password" name="password" required>
+        </div>
+
+        <div class="form-group">
+          <label for="confirmPassword">
+            <i class="fas fa-lock"></i>
+            Confirm Password
+          </label>
+          <input type="password" id="confirmPassword" name="confirmPassword" required>
+        </div>
+
+        <div class="form-options">
+          <label class="checkbox-label">
+            <input type="checkbox" id="terms" required>
+            <span class="checkmark"></span>
+            I agree to the <a href="#" class="terms-link">Terms & Conditions</a>
+          </label>
+        </div>
+
+        <button type="submit" class="auth-btn">
+          <i class="fas fa-user-plus"></i>
+          Create Account
+        </button>
+      </form>
+
+      <div class="auth-footer">
+        <p>Already have an account? <a href="login.html">Sign in here</a></p>
+        <a href="index.html" class="back-home">
+          <i class="fas fa-arrow-left"></i>
+          Back to Home
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    document.getElementById('signupForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+      
+      const fullName = document.getElementById('fullName').value;
+      const email = document.getElementById('email').value;
+      const phone = document.getElementById('phone').value;
+      const password = document.getElementById('password').value;
+      const confirmPassword = document.getElementById('confirmPassword').value;
+      const terms = document.getElementById('terms').checked;
+      
+      // Validation
+      if (!fullName || !email || !phone || !password || !confirmPassword) {
+        alert('Please fill in all fields');
+        return;
+      }
+      
+      if (password !== confirmPassword) {
+        alert('Passwords do not match');
+        return;
+      }
+      
+      if (!terms) {
+        alert('Please agree to the Terms & Conditions');
+        return;
+      }
+      
+      // For demo purposes, redirect to dashboard
+      // In a real app, you would create the account with Firebase or your backend
+      localStorage.setItem('userLoggedIn', 'true');
+      localStorage.setItem('userEmail', email);
+      localStorage.setItem('userName', fullName);
+      alert('Account created successfully!');
+      window.location.href = 'dashboard.html';
+    });
+  </script>
+</body>
+</html> 
